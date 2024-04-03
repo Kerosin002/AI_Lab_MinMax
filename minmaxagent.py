@@ -8,7 +8,8 @@ class MinMaxAgent:
 
     def heuristic(self, s):
         corners = [(0, 0), (0, s.width - 1), (s.height - 1, 0), (s.height - 1, s.width - 1)]
-        return 0.2 * sum(1 for row, col in corners if s.board[row][col] == self.my_token)
+        count = sum(1 for row, col in corners if s.board[row][col] == self.my_token)
+        return 0.2 * count
 
     def lookForMV(self, x, s, d):
         mv = 0
@@ -32,10 +33,10 @@ class MinMaxAgent:
     def minmax(self, s, x, d):
         if self.my_token == s.wins:
             return 1
-        elif self.my_token is None and s.game_over is True:
-            return 0
-        elif self.my_token != s.wins:
+        if self.my_token != s.wins and s.wins is not None:
             return -1
+        if s.wins is None and s.game_over is True:
+            return 0
         if d == 0:
             return self.heuristic(s)
         return self.lookForMV(x, s, d)
